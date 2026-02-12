@@ -1,9 +1,9 @@
 ---
 import type { GetStaticPaths } from "astro";
 // Código Server Side Only - Momento de construcción BUILD TIME
-import PokemonCard from '../../components/pokemons/PokemonCard.astro';
-import type { PokemonListResponse } from '../../interfaces/pokemon-list.response';
-import MainLayout from "../../layouts/MainLayout.astro";
+import PokemonCard from '@components/pokemons/PokemonCard.astro';
+import type { PokemonListResponse } from '@interfaces/pokemon-list.response';
+import MainLayout from "@layouts/MainLayout.astro";
 
 
 export const getStaticPaths = ( async ({ paginate }) => {    
