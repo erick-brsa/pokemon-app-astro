@@ -4,6 +4,7 @@ import type { GetStaticPaths } from "astro";
 import PokemonCard from '@components/pokemons/PokemonCard.astro';
 import type { PokemonListResponse } from '@interfaces/pokemon-list.response';
 import MainLayout from "@layouts/MainLayout.astro";
+import Title from "@components/shared/Title.astro";
 
 
 export const getStaticPaths = ( async ({ paginate }) => {    
@@ -12,12 +13,12 @@ export const getStaticPaths = ( async ({ paginate }) => {
     return paginate(results, { pageSize: 20});
 }) satisfies GetStaticPaths;;
 
-const title = 'Pokemon Satatic | Home';
+const title = 'Pokemon Static | Paginado';
 const { page } = Astro.props;
 ---
 
 <MainLayout title={title}>
-	<h1 class="text-3xl font-bold">Listado de Pokémons</h1>
+	<Title>Listado de Pokémons</Title>
 	<section
 	aria-label="Listado de Pokémons"
 	class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-4 my-10"
