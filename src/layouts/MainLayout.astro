@@ -9,6 +9,7 @@ interface Props {
 }
 
 import { siteInfo } from '../consts/site-info';
+import Navbar from "@components/shared/Navbar.astro";
 
 const { title = siteInfo.title, description = siteInfo.description, image } = Astro.props;
 ---
@@ -34,9 +35,16 @@ const { title = siteInfo.title, description = siteInfo.description, image } = As
 		<title>{title}</title>
 
 		<ClientRouter  />
+
+		<!-- <style>
+			@view-transition {
+				navigation: auto;
+			}
+		</style> -->
 	</head>
-	<body class="bg-slate-800 text-slate-100 m-auto max-w-3xl">
-        <main class="p-10">
+	<body class="bg-slate-800 text-slate-100">
+		<Navbar />
+        <main class="m-auto max-w-3xl p-10">
             <slot />
         </main>
 	</body>
