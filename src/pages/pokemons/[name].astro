@@ -29,7 +29,7 @@ const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
     image={imageSrc}
 >
     <section class="my-10 mx-10">
-        <div class="flex flex-row">
+        <div class="flex flex-row align-baseline">
             <div>
                 <button
                     class="text-blue-500 text-lg hover:underline cursor-pointer"
@@ -39,15 +39,23 @@ const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
                 </button>
                 <Title>{`#${id} ${name}`}</Title>
             </div>
-
-            <button class="ml-4" id="btn-favorite">
-                <Icon
-                    class=""
-                    name="heart-outline" />
-                <Icon
-                    class="hidden"
-                    name="heart-full" />
-            </button>
+            <div class="flex flex-col justify-center mt-5">
+                <button 
+                    class="ml-4" 
+                    id="btn-favorite"
+                    data-name={name}
+                    data-id={id}
+                >
+                    <Icon
+                        data-outline
+                        class="w-8 h-8"
+                        name="heart-outline" />
+                    <Icon
+                        data-full
+                        class="w-8 h-8 hidden"
+                        name="heart-full" />
+                </button>
+            </div>
         </div>
 
         <PokemonCard name={name} url={url} isBig />
@@ -61,6 +69,68 @@ const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
 </MainLayout>
 
 <script>
+    interface FavoritePokemon {
+        name: string;
+        id: number;
+    }
+
+    // document.addEventListener('astro:before-preparation', () => {
+    //     console.log('astro:before-preparation');
+    // });
+
+    // document.addEventListener('astro:after-preparation', () => {
+    //     console.log('astro:after-preparation');
+    // });
+
+    // document.addEventListener('astro:before-swap', () => {
+    //     console.log('astro:before-swap');
+    // });
+
+    // document.addEventListener('astro:after-swap', () => {
+    //     console.log('astro:after-swap');
+    // });
+
+    // document.addEventListener('astro:page-load', () => {
+    //     console.log('astro:page-load');
+    // });
+
+    const handlePageLoad = () => {
+
+        let favoritePokemons: FavoritePokemon[] = JSON.parse(localStorage.getItem('favorites') ?? '[]');
+
+        const btnFavorite = document.querySelector('#btn-favorite') as HTMLButtonElement;
+        
+        if (!btnFavorite) return;
+        
+        const name = btnFavorite.dataset.name ?? '';
+        const id = btnFavorite.dataset.id ?? '';
+
+        const heartOutline = document.querySelector('[data-outline]') as HTMLElement;
+        const heartFull = document.querySelector('[data-full]') as HTMLElement;
+
+        const toggleFavorite = () => {
+            const isFavorite = favoritePokemons.some(fav => fav.name === name);
+            if (isFavorite) {
+                // Remover
+                favoritePokemons.filter(fav => fav.name !== name);
+            } else {
+                // Agregar
+                favoritePokemons.push({
+                    id: Number(id), 
+                    name: name
+                });
+            }
+            localStorage.setItem('favorites', JSON.stringify(favoritePokemons));
+        }
+
+        btnFavorite.addEventListener('click', () => {
+            heartOutline.classList.toggle('hidden');
+            toggleFavorite()
+            heartFull.classList.toggle('hidden');
+        });
+    }
+
+    document.addEventListener('astro:page-load', handlePageLoad);
 </script>
 
 <style>
