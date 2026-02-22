@@ -28,32 +28,28 @@ const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
     description={`Información sobre el pókemon ${name}`}
     image={imageSrc}
 >
-    <section class="my-10 mx-10">
+    <section class="">
         <div class="flex flex-row align-baseline">
-            <div>
-                <button
-                    class="text-blue-500 text-lg hover:underline cursor-pointer"
-                    onclick="history.back()"
-                >
-                    Regresar
-                </button>
+            <div class="w-full">
+                <div class="mb-5">
+                    <button
+                        class="text-blue-500 text-lg hover:underline cursor-pointer"
+                        onclick="history.back()"
+                    >
+                        Regresar
+                    </button>
+                </div>
                 <Title>{`#${id} ${name}`}</Title>
             </div>
-            <div class="flex flex-col justify-center mt-5">
-                <button 
-                    class="ml-4" 
+            <div class="flex flex-col justify-center mt-12">
+                <button
+                    class="ml-4"
                     id="btn-favorite"
                     data-name={name}
                     data-id={id}
                 >
-                    <Icon
-                        data-outline
-                        class="w-8 h-8"
-                        name="heart-outline" />
-                    <Icon
-                        data-full
-                        class="w-8 h-8 hidden"
-                        name="heart-full" />
+                    <Icon data-outline class="w-8 h-8" name="heart-outline" />
+                    <Icon data-full class="w-8 h-8 hidden" name="heart-full" />
                 </button>
             </div>
         </div>
@@ -69,10 +65,7 @@ const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
 </MainLayout>
 
 <script>
-    interface FavoritePokemon {
-        name: string;
-        id: number;
-    }
+    import type { FavoritePokemon } from "@interfaces/favorite-pokemon";
 
     // document.addEventListener('astro:before-preparation', () => {
     //     console.log('astro:before-preparation');
@@ -95,49 +88,58 @@ const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
     // });
 
     const handlePageLoad = () => {
+        let favoritePokemons: FavoritePokemon[] = JSON.parse(
+            localStorage.getItem("favorites") ?? "[]",
+        );
 
-        let favoritePokemons: FavoritePokemon[] = JSON.parse(localStorage.getItem('favorites') ?? '[]');
+        const btnFavorite = document.querySelector(
+            "#btn-favorite",
+        ) as HTMLButtonElement;
 
-        const btnFavorite = document.querySelector('#btn-favorite') as HTMLButtonElement;
-        
         if (!btnFavorite) return;
-        
-        const name = btnFavorite.dataset.name ?? '';
-        const id = btnFavorite.dataset.id ?? '';
 
-        const heartOutline = document.querySelector('[data-outline]') as HTMLElement;
-        const heartFull = document.querySelector('[data-full]') as HTMLElement;
+        const name = btnFavorite.dataset.name ?? "";
+        const id = btnFavorite.dataset.id ?? "";
 
-        const isFavorite = favoritePokemons.some(fav => fav.name === name);
-        
+        const heartOutline = document.querySelector(
+            "[data-outline]",
+        ) as HTMLElement;
+        const heartFull = document.querySelector("[data-full]") as HTMLElement;
+
+        const isFavorite = favoritePokemons.some((fav) => fav.name === name);
+
         if (isFavorite) {
             heartOutline.classList.add("hidden");
             heartFull.classList.remove("hidden");
         }
 
         const toggleFavorite = () => {
-            const isFavorite = favoritePokemons.some(fav => fav.name === name);
+            const isFavorite = favoritePokemons.some(
+                (fav) => fav.name === name,
+            );
             if (isFavorite) {
                 // Remover
-                favoritePokemons = favoritePokemons.filter(fav => fav.name !== name);
+                favoritePokemons = favoritePokemons.filter(
+                    (fav) => fav.name !== name,
+                );
             } else {
                 // Agregar
                 favoritePokemons.push({
-                    id: Number(id), 
-                    name: name
+                    id: Number(id),
+                    name: name,
                 });
             }
-            localStorage.setItem('favorites', JSON.stringify(favoritePokemons));
-        }
+            localStorage.setItem("favorites", JSON.stringify(favoritePokemons));
+        };
 
-        btnFavorite.addEventListener('click', () => {
-            heartOutline.classList.toggle('hidden');
-            toggleFavorite()
-            heartFull.classList.toggle('hidden');
+        btnFavorite.addEventListener("click", () => {
+            heartOutline.classList.toggle("hidden");
+            toggleFavorite();
+            heartFull.classList.toggle("hidden");
         });
-    }
+    };
 
-    document.addEventListener('astro:page-load', handlePageLoad);
+    document.addEventListener("astro:page-load", handlePageLoad);
 </script>
 
 <style>
